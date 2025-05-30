@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - include:
+      file: db/changelog/db.changelog-person.xml
+  - include:
+      file: db/changelog/db.changelog-expense-type.xml
+  - include:
+      file: db/changelog/db.changelog-expense.xml
+  - include:
+      file: db/changelog/db.changelog-monthly-expense.xml

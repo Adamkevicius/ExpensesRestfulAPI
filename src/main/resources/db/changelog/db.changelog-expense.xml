@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="create-expense-table" author="Matvej">
+        <createTable tableName="expense">
+            <column name="id" autoIncrement="true" type="bigint">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+
+            <column name="description" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="creation_date" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="amount" type="double">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="expense_type_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_expense_type_id"
+                             referencedColumnNames="id" referencedTableName="expense_type"/>
+            </column>
+
+            <column name="person_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_person_id"
+                             referencedColumnNames="id" referencedTableName="person"/>
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>
