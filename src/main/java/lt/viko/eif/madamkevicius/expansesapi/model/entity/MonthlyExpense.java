@@ -1,5 +1,6 @@
 package lt.viko.eif.madamkevicius.expansesapi.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
@@ -17,6 +18,7 @@ public class MonthlyExpense extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "person_id", referencedColumnName = "id")
+    @JsonIgnore
     private Person person;
 
     public MonthlyExpense() {

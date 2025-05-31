@@ -2,10 +2,12 @@ package lt.viko.eif.madamkevicius.expansesapi.model_assembler;
 
 import io.micrometer.common.lang.NonNull;
 import lt.viko.eif.madamkevicius.expansesapi.controller.ExpenseController;
+import lt.viko.eif.madamkevicius.expansesapi.controller.PersonController;
 import lt.viko.eif.madamkevicius.expansesapi.model.dto.ExpenseDTO;
 import lt.viko.eif.madamkevicius.expansesapi.model.dto.MonthlyExpenseDTO;
 import lt.viko.eif.madamkevicius.expansesapi.model.dto.UpdateExpenseDTO;
 import lt.viko.eif.madamkevicius.expansesapi.model.dto.DeleteResponseDTO;
+import lt.viko.eif.madamkevicius.expansesapi.model.entity.Person;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
@@ -23,6 +25,14 @@ public class ExpenseModelAssembler implements RepresentationModelAssembler<Expen
     @Override
     public EntityModel<ExpenseDTO> toModel(@NonNull ExpenseDTO expenseDTO) {
         return EntityModel.of(expenseDTO,
+                linkTo(methodOn(PersonController.class).getAll())
+                        .withRel("get-all").withTitle("Get all people").withType("GET"),
+                linkTo(methodOn(PersonController.class)
+                        .getById(new Person().getId()))
+                        .withRel("get-by-id").withTitle("Get person by id").withType("GET"),
+                linkTo(methodOn(PersonController.class)
+                        .getByUsername(new Person().getUsername()))
+                        .withRel("get-by-username").withTitle("Get person by username").withType("GET"),
                 linkTo(methodOn(ExpenseController.class)
                         .create(new ExpenseDTO())).withRel("create").withTitle("Create expense").withType("POST"),
                 linkTo(methodOn(ExpenseController.class)
@@ -73,6 +83,14 @@ public class ExpenseModelAssembler implements RepresentationModelAssembler<Expen
 
         return CollectionModel.of(
                 monthlyExpenseModels,
+                linkTo(methodOn(PersonController.class).getAll())
+                        .withRel("get-all").withTitle("Get all people").withType("GET"),
+                linkTo(methodOn(PersonController.class)
+                        .getById(new Person().getId()))
+                        .withRel("get-by-id").withTitle("Get person by id").withType("GET"),
+                linkTo(methodOn(PersonController.class)
+                        .getByUsername(new Person().getUsername()))
+                        .withRel("get-by-username").withTitle("Get person by username").withType("GET"),
                 linkTo(methodOn(ExpenseController.class)
                         .create(new ExpenseDTO())).withRel("create")
                         .withTitle("Create expense").withType("POST"),
@@ -86,7 +104,7 @@ public class ExpenseModelAssembler implements RepresentationModelAssembler<Expen
                         .deleteAll()).withRel("delete")
                         .withTitle("Delete all expenses").withType("DELETE"),
                 linkTo(methodOn(ExpenseController.class)
-                        .deleteByDescription("example-description")).withRel("delete-by-description")
+                        .deleteByDescription("{description}")).withRel("delete-by-description")
                         .withTitle("Delete expense by description").withType("DELETE")
         );
     }

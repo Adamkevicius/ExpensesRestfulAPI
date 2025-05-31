@@ -1,55 +1,44 @@
 package lt.viko.eif.madamkevicius.expansesapi.service;
 
-import lt.viko.eif.madamkevicius.expansesapi.model.dto.PersonDTO;
+import lt.viko.eif.madamkevicius.expansesapi.exception.PersonListIsEmptyException;
+import lt.viko.eif.madamkevicius.expansesapi.exception.PersonNotFoundByIdException;
+import lt.viko.eif.madamkevicius.expansesapi.exception.PersonNotFoundByUsernameException;
 import lt.viko.eif.madamkevicius.expansesapi.model.entity.Person;
 import lt.viko.eif.madamkevicius.expansesapi.repo.PersonRepo;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class PersonService {
 
-    private final PersonRepo userRepo;
+    private final PersonRepo personRepo;
 
-    private final BCryptPasswordEncoder encoder;
-
-    private final AuthenticationManager authManager;
-
-    private final JWTService jwtService;
-
-    @Autowired
-    public PersonService(PersonRepo userRepo, AuthenticationManager authManager, JWTService jwtService) {
-        this.userRepo = userRepo;
-        this.authManager = authManager;
-        this.jwtService = jwtService;
-        this.encoder = new BCryptPasswordEncoder(12);
+    public PersonService(PersonRepo personRepo) {
+        this.personRepo = personRepo;
     }
 
-    public String register(PersonDTO personDTO) {
-        Person person = new Person();
-        person.setUsername(personDTO.getUsername());
-        person.setPassword(encoder.encode(personDTO.getPassword()));
-        userRepo.save(person);
-        return jwtService.generateToken(personDTO.getUsername());
-    }
+    public List<Person> getAll() {
+        List<Person> personList = personRepo.findAll();
 
-    public String verifyUser(PersonDTO personDTO) {
-        Authentication auth = authManager
-                .authenticate(
-                        new UsernamePasswordAuthenticationToken(
-                                personDTO.getUsername(), personDTO.getPassword())
-                );
-
-        if(auth.isAuthenticated()) {
-            return jwtService.generateToken(
-                    personDTO.getUsername()
-            );
+        if(personList.isEmpty()) {
+            throw new PersonListIsEmptyException();
         }
 
-        return "Failed to authenticate";
+        return personList;
+    }
+
+    public Person getById(int id) {
+        return personRepo.findById(id).orElseThrow(() -> new PersonNotFoundByIdException(id));
+    }
+
+    public Person getByUsername(String username) {
+        Person person =  personRepo.findByUsername(username);
+
+        if(person == null) {
+            throw new PersonNotFoundByUsernameException(username);
+        }
+
+        return person;
     }
 }

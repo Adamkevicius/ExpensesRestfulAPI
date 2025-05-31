@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.List;
 
 @Component
 public class JWTFilter extends OncePerRequestFilter {
@@ -60,4 +61,21 @@ public class JWTFilter extends OncePerRequestFilter {
 
         filterChain.doFilter(request, response);
     }
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        List<String> swaggerUrls = List.of(
+                "/swagger-ui/",
+                "/swagger-ui.html",
+                "/swagger-ui/index.html",
+                "/v3/api-docs",
+                "/v3/api-docs/",
+                "/v3/api-docs/**");
+
+        String path = request.getRequestURI();
+
+        return swaggerUrls.stream().anyMatch(path::startsWith);
+    }
+
+
 }

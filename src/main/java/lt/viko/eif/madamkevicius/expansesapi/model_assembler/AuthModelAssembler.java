@@ -3,10 +3,12 @@ package lt.viko.eif.madamkevicius.expansesapi.model_assembler;
 import io.micrometer.common.lang.NonNull;
 import lt.viko.eif.madamkevicius.expansesapi.controller.ExpenseController;
 import lt.viko.eif.madamkevicius.expansesapi.controller.AuthController;
+import lt.viko.eif.madamkevicius.expansesapi.controller.PersonController;
 import lt.viko.eif.madamkevicius.expansesapi.model.dto.ExpenseDTO;
 import lt.viko.eif.madamkevicius.expansesapi.model.dto.PersonDTO;
 import lt.viko.eif.madamkevicius.expansesapi.model.dto.UpdateExpenseDTO;
 import lt.viko.eif.madamkevicius.expansesapi.model.dto.AuthResponseDTO;
+import lt.viko.eif.madamkevicius.expansesapi.model.entity.Person;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.stereotype.Component;
@@ -21,6 +23,14 @@ public class AuthModelAssembler implements RepresentationModelAssembler<AuthResp
     @Override
     public EntityModel<AuthResponseDTO> toModel(@NonNull AuthResponseDTO jwtToken) {
         return EntityModel.of(jwtToken,
+                linkTo(methodOn(PersonController.class).getAll())
+                        .withRel("get-all").withTitle("Get all people").withType("GET"),
+                linkTo(methodOn(PersonController.class)
+                        .getById(new Person().getId()))
+                        .withRel("get-by-id").withTitle("Get person by id").withType("GET"),
+                linkTo(methodOn(PersonController.class)
+                        .getByUsername(new Person().getUsername()))
+                        .withRel("get-by-username").withTitle("Get person by username").withType("GET"),
                 linkTo(methodOn(ExpenseController.class)
                         .create(new ExpenseDTO())).withRel("create").withTitle("Create expense").withType("POST")
                 , linkTo(methodOn(ExpenseController.class)

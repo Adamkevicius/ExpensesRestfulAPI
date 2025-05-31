@@ -3,7 +3,7 @@ package lt.viko.eif.madamkevicius.expansesapi.service;
 import lt.viko.eif.madamkevicius.expansesapi.model.dto.ExpenseDTO;
 import lt.viko.eif.madamkevicius.expansesapi.model.dto.MonthlyExpenseDTO;
 import lt.viko.eif.madamkevicius.expansesapi.model.dto.UpdateExpenseDTO;
-import lt.viko.eif.madamkevicius.expansesapi.exception.ExpenseListNotFoundException;
+import lt.viko.eif.madamkevicius.expansesapi.exception.ExpenseListIsEmptyException;
 import lt.viko.eif.madamkevicius.expansesapi.exception.ExpenseTypeNotFoundException;
 import lt.viko.eif.madamkevicius.expansesapi.model.entity.Expense;
 import lt.viko.eif.madamkevicius.expansesapi.model.entity.MonthlyExpense;
@@ -67,7 +67,7 @@ public class ExpenseService {
         List<Expense> expensesList = expenseRepo.findAll();
 
         if(expensesList.isEmpty()) {
-            throw new ExpenseListNotFoundException("Expenses were not found");
+            throw new ExpenseListIsEmptyException("Expenses were not found");
         }
 
         List<ExpenseDTO> expenses = new ArrayList<>();
@@ -85,14 +85,14 @@ public class ExpenseService {
 
         int year = LocalDate.now().getYear();
         int month = Month.valueOf(requestMonth.toUpperCase()).getValue();
-        int personId = personRepo.findIdByUsername(personUsername);
+        int personId = personRepo.findByUsername(personUsername).getId();
 
         List<Expense> expenseList = expenseRepo.findAllByMonthAndYear(
                 month, year, personId
         );
 
         if(expenseList.isEmpty()) {
-            throw new ExpenseListNotFoundException("Expenses for the month " + requestMonth + " were not found");
+            throw new ExpenseListIsEmptyException("Expenses for the month " + requestMonth + " were not found");
         }
 
         List<MonthlyExpense> monthlyExpensesList = monthlyExpenseRepo.findAllByYearAndMonthAndPersonId(
@@ -107,7 +107,7 @@ public class ExpenseService {
         String personUsername = authentication.getName();
 
         Expense expense = expenseRepo.findByDescriptionAndPersonId(
-                        updateExpenseDTO.getOldDescription(), personRepo.findIdByUsername(personUsername))
+                        updateExpenseDTO.getOldDescription(), personRepo.findByUsername(personUsername).getId())
                 .orElseThrow(() -> new ExpenseTypeNotFoundException(updateExpenseDTO.getOldDescription()));
 
         if (!updateExpenseDTO.getOldDescription().equals(expense.getDescription())) {
