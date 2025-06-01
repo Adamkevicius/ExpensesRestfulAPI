@@ -5,7 +5,6 @@ import lt.viko.eif.madamkevicius.expansesapi.model.dto.PersonDTO;
 import lt.viko.eif.madamkevicius.expansesapi.model.dto.AuthResponseDTO;
 import lt.viko.eif.madamkevicius.expansesapi.model_assembler.AuthModelAssembler;
 import lt.viko.eif.madamkevicius.expansesapi.service.AuthService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,15 +13,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "Authentication operations", description = "Endpoint for user authentication")
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/auth")
 public class AuthController {
 
     private final AuthService personService;
 
     private final AuthModelAssembler personModelAssembler;
 
-
-    @Autowired
     public AuthController(AuthService userService, AuthModelAssembler personModelAssembler) {
         this.personService = userService;
         this.personModelAssembler = personModelAssembler;

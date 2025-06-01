@@ -7,7 +7,6 @@ import lt.viko.eif.madamkevicius.expansesapi.model.dto.UpdateExpenseDTO;
 import lt.viko.eif.madamkevicius.expansesapi.model.dto.DeleteResponseDTO;
 import lt.viko.eif.madamkevicius.expansesapi.model_assembler.ExpenseModelAssembler;
 import lt.viko.eif.madamkevicius.expansesapi.service.ExpenseService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
@@ -34,7 +33,6 @@ public class ExpenseController {
 
     private final ExpenseModelAssembler expenseModelAssembler;
 
-    @Autowired
     public ExpenseController(ExpenseService expenseService, ExpenseModelAssembler expenseModelAssembler) {
         this.expenseService = expenseService;
         this.expenseModelAssembler = expenseModelAssembler;

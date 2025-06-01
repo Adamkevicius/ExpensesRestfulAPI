@@ -6,7 +6,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lt.viko.eif.madamkevicius.expansesapi.service.JWTService;
 import lt.viko.eif.madamkevicius.expansesapi.service.MyUserDetailsService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,7 +24,6 @@ public class JWTFilter extends OncePerRequestFilter {
 
     private final ApplicationContext context;
 
-    @Autowired
     public JWTFilter(JWTService jwtService, ApplicationContext context) {
         this.jwtService = jwtService;
         this.context = context;
@@ -61,21 +59,4 @@ public class JWTFilter extends OncePerRequestFilter {
 
         filterChain.doFilter(request, response);
     }
-
-    @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) {
-        List<String> swaggerUrls = List.of(
-                "/swagger-ui/",
-                "/swagger-ui.html",
-                "/swagger-ui/index.html",
-                "/v3/api-docs",
-                "/v3/api-docs/",
-                "/v3/api-docs/**");
-
-        String path = request.getRequestURI();
-
-        return swaggerUrls.stream().anyMatch(path::startsWith);
-    }
-
-
 }
