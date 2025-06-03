@@ -63,11 +63,24 @@ public class PersonAssembler implements RepresentationModelAssembler<Person, Ent
                 .withSelfRel().withTitle("Get person by id").withType("GET"));
 
         getByIdModel.add(
-                linkTo(methodOn(PersonController.class).getAll())
-                .withRel("get-all").withTitle("Get all people").withType("GET"),
                 linkTo(methodOn(PersonController.class)
                         .getByUsername(person.getUsername()))
-                        .withRel("get-by-username").withTitle("Get by username").withType("GET"));
+                        .withRel("get-by-username").withTitle("Get person by username").withType("GET"),
+                linkTo(methodOn(ExpenseController.class)
+                        .create(new ExpenseDTO())).withRel("create").withTitle("Create expense").withType("POST")
+                , linkTo(methodOn(ExpenseController.class)
+                        .getAll()).withRel("all").withTitle("Get all expenses").withType("GET"),
+                linkTo(methodOn(ExpenseController.class)
+                        .getMonthly("{month}")).withRel("get-monthly")
+                        .withTitle("Get expenses by month").withType("GET")
+                , linkTo(methodOn(ExpenseController.class)
+                        .update(new UpdateExpenseDTO())).withRel("update").withTitle("Update expense").withType("PUT")
+                , linkTo(methodOn(ExpenseController.class)
+                        .deleteByDescription("{description}")).withRel("delete")
+                        .withTitle("Delete expense by description").withType("DELETE")
+                ,linkTo(methodOn(ExpenseController.class)
+                        .deleteAll()).withRel("delete-by-description").withTitle("Delete expense by description")
+                        .withType("DELETE"));
 
         return getByIdModel;
     }
@@ -79,10 +92,24 @@ public class PersonAssembler implements RepresentationModelAssembler<Person, Ent
                 .withSelfRel().withTitle("Get person by username").withType("GET"));
 
         getByUsernameModel.add(
-                linkTo(methodOn(PersonController.class).getAll())
-                        .withRel("get-all").withTitle("Get all people").withType("GET"),
-                linkTo(methodOn(PersonController.class).
-                        getById(person.getId())).withRel("get-by-id").withTitle("Get by username").withType("GET"));
+                linkTo(methodOn(PersonController.class)
+                        .getById(person.getId()))
+                        .withRel("get-by-id").withTitle("Get person by id").withType("GET"),
+                linkTo(methodOn(ExpenseController.class)
+                        .create(new ExpenseDTO())).withRel("create").withTitle("Create expense").withType("POST")
+                , linkTo(methodOn(ExpenseController.class)
+                        .getAll()).withRel("all").withTitle("Get all expenses").withType("GET"),
+                linkTo(methodOn(ExpenseController.class)
+                        .getMonthly("{month}")).withRel("get-monthly")
+                        .withTitle("Get expenses by month").withType("GET")
+                , linkTo(methodOn(ExpenseController.class)
+                        .update(new UpdateExpenseDTO())).withRel("update").withTitle("Update expense").withType("PUT")
+                , linkTo(methodOn(ExpenseController.class)
+                        .deleteByDescription("{description}")).withRel("delete")
+                        .withTitle("Delete expense by description").withType("DELETE")
+                ,linkTo(methodOn(ExpenseController.class)
+                        .deleteAll()).withRel("delete-by-description").withTitle("Delete expense by description")
+                        .withType("DELETE"));
 
         return getByUsernameModel;
     }
